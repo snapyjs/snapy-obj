@@ -1,6 +1,6 @@
 diff = require "diff"
 cycle = require "cycle"
-module.exports = client: ({snap,ask,timeout}) ->
+module.exports = client: ({snap,ask,timeout,util}) ->
   snap.hookIn (obj) ->
     if (val = obj.state.obj)?
       delete obj.state.obj
@@ -15,7 +15,10 @@ module.exports = client: ({snap,ask,timeout}) ->
             )
           throw obj
       else
-        obj.question = JSON.stringify(val, null, 2)
+        if util.isString(val)
+          obj.question = val
+        else
+          obj.question = JSON.stringify(val, null, 2)
         obj.timeout?.stop()
         ask(obj).then ->
           obj.timeout?.resume()
