@@ -4,7 +4,10 @@ module.exports = client: ({snap,ask,timeout,util}) ->
   snap.hookIn (obj) ->
     if (val = obj.state.obj)?
       delete obj.state.obj
-      val = cycle.decycle(val)
+      if val instanceof Error
+        val = val.toString()
+      else
+        val = cycle.decycle(val)
       obj.value = val
       if (oldState = obj.oldState).set
         changes = obj.diff = diff.diffJson(oldState.value, val)
@@ -14,14 +17,18 @@ module.exports = client: ({snap,ask,timeout,util}) ->
               )
             )
           throw obj
+        else
+          obj.success = true
       else
         if util.isString(val)
           obj.question = val
-        else if val instanceof Error
-          obj.question = val.toString()
         else
           obj.question = JSON.stringify(val, null, 2)
         obj.timeout?.stop()
-        ask(obj).then ->
-          obj.timeout?.resume()
-          obj.saveState = val
+        ask(obj)
+        .then (o) ->
+          if o.success == true
+            obj.timeout?.resume()
+            obj.saveState = val
+          else
+            throw o
