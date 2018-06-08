@@ -17,8 +17,7 @@
   },
   "main": "lib/client.js",
   "files": [
-    "lib/*.js",
-    "shrinkwrap.yaml"
+    "lib/*.js"
   ],
   "dependencies": {
     "cycle": "^1.0.3",

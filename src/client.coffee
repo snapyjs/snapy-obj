@@ -17,6 +17,8 @@ module.exports = client: ({snap,ask,timeout,util}) ->
       else
         if util.isString(val)
           obj.question = val
+        else if val instanceof Error
+          obj.question = val.toString()
         else
           obj.question = JSON.stringify(val, null, 2)
         obj.timeout?.stop()
