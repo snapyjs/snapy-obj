@@ -24,11 +24,4 @@ module.exports = client: ({snap,ask,timeout,util}) ->
           obj.question = val
         else
           obj.question = JSON.stringify(val, null, 2)
-        obj.timeout?.stop()
         ask(obj)
-        .then (o) ->
-          if o.success == true
-            obj.timeout?.resume()
-            obj.saveState = val
-          else
-            throw o

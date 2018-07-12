@@ -17,9 +17,8 @@ test (snap) =>
 
 test (snap) =>
   # should have a proper question
-  # and a save state when no oldState is given
   tmp = ask._chain
-  ask._chain = [[(o) => o.success = true]]
+  ask._chain = []
   snap plain: true, promise: snaphook(genState(true)).then (o) =>
     ask._chain = tmp
     return o
